@@ -1,0 +1,54 @@
+name: 'Firebase App Distribution'
+description:
+  'Distribute app to Firebase App Distribution with wildcard file support'
+author: 'Jeffery Orazulike'
+
+# Add your action's branding here. This will appear on the GitHub Marketplace.
+branding:
+  icon: 'upload-cloud'
+  color: 'orange'
+
+# Define your inputs here.
+inputs:
+  serviceCredentialsFile:
+    description: 'Path to the service account credentials JSON file'
+    required: false
+  serviceCredentialsFileContent:
+    description: 'Content of the service account credentials JSON file'
+    required: false
+  file:
+    description:
+      'Path to the binary file to upload. Supports wildcard patterns (e.g.,
+      *.apk, **/*.aab)'
+    required: true
+  appId:
+    description: 'Firebase App ID'
+    required: true
+  groups:
+    description: 'Comma-separated list of tester groups'
+    required: false
+  testers:
+    description: 'Comma-separated list of tester emails'
+    required: false
+  releaseNotes:
+    description: 'Release notes for this build'
+    required: false
+  releaseNotesFile:
+    description: 'Path to file containing release notes'
+    required: false
+  debug:
+    description: 'Enable debug mode'
+    required: false
+    default: 'false'
+
+outputs:
+  firebase-console-uri:
+    description: 'Firebase Console URI for this release'
+  testing-uri:
+    description: 'Testing URI to share with testers'
+  binary-download-uri:
+    description: 'URI to download the release binary'
+
+runs:
+  using: node20
+  main: dist/index.js

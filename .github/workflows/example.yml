@@ -1,0 +1,40 @@
+name: Example - Distribute to Firebase
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  distribute:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Example: Build your Android app
+      # - name: Set up JDK
+      #   uses: actions/setup-java@v4
+      #   with:
+      #     java-version: '17'
+      #     distribution: 'temurin'
+
+      # - name: Build APK
+      #   run: ./gradlew assembleRelease
+
+      # Distribute to Firebase App Distribution
+      - name: Distribute to Firebase
+        uses: ./
+        with:
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          file: 'app/build/outputs/apk/**/*.apk' # Supports wildcards!
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          groups: 'internal-testers'
+          releaseNotes: |
+            🚀 New Build from GitHub Actions
+
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref_name }}
+            Actor: ${{ github.actor }}

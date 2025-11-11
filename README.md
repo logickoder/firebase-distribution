@@ -1,11 +1,15 @@
 # Firebase App Distribution Action
 
-A GitHub Action to distribute your Android and iOS apps to testers using Firebase App Distribution. Supports wildcard file patterns for easy distribution of multiple builds (e.g., APK splits).
+A GitHub Action to distribute your Android and iOS apps to testers using
+Firebase App Distribution. Supports wildcard file patterns for easy distribution
+of multiple builds (e.g., APK splits).
 
 ## Features
 
-- 📦 Distribute Android (APK, AAB) and iOS (IPA) apps to Firebase App Distribution
-- 🎯 Support for wildcard patterns to upload multiple files (perfect for APK splits)
+- 📦 Distribute Android (APK, AAB) and iOS (IPA) apps to Firebase App
+  Distribution
+- 🎯 Support for wildcard patterns to upload multiple files (perfect for APK
+  splits)
 - 🔐 Service account authentication (file or content)
 - 📝 Automatic release notes from git history or custom notes
 - 👥 Target specific tester groups or individual testers
@@ -19,7 +23,8 @@ A GitHub Action to distribute your Android and iOS apps to testers using Firebas
 
 ## Authentication
 
-This action uses Firebase service account authentication for secure, long-term access.
+This action uses Firebase service account authentication for secure, long-term
+access.
 
 ### Setting up Service Account
 
@@ -46,7 +51,8 @@ This action uses Firebase service account authentication for secure, long-term a
 
 ### Upload Multiple Files with Wildcards
 
-Perfect for distributing APK splits or multiple variants. See the [Wildcard Pattern Guide](WILDCARD_GUIDE.md) for more pattern examples.
+Perfect for distributing APK splits or multiple variants. See the
+[Wildcard Pattern Guide](WILDCARD_GUIDE.md) for more pattern examples.
 
 ```yaml
 - name: Distribute APK Splits
@@ -132,7 +138,8 @@ jobs:
 | `releaseNotesFile`              | Path to file containing release notes                                            | No       |                   |
 | `debug`                         | Enable debug mode for detailed logging                                           | No       | `false`           |
 
-\*Either `serviceCredentialsFile` or `serviceCredentialsFileContent` must be provided
+\*Either `serviceCredentialsFile` or `serviceCredentialsFileContent` must be
+provided
 
 ## Outputs
 
@@ -163,7 +170,8 @@ jobs:
 
 ## Wildcard Patterns
 
-The action uses [glob](https://github.com/isaacs/node-glob) patterns. Here are some examples:
+The action uses [glob](https://github.com/isaacs/node-glob) patterns. Here are
+some examples:
 
 - `*.apk` - All APK files in current directory
 - `**/*.apk` - All APK files in current directory and subdirectories
@@ -177,10 +185,12 @@ See [WILDCARD_GUIDE.md](WILDCARD_GUIDE.md) for comprehensive pattern examples.
 
 ### Required Secrets
 
-Add these secrets to your GitHub repository (Settings > Secrets and variables > Actions):
+Add these secrets to your GitHub repository (Settings > Secrets and variables >
+Actions):
 
 1. `FIREBASE_SERVICE_ACCOUNT` - Your service account JSON content
-2. `FIREBASE_APP_ID` - Your Firebase App ID (e.g., `1:1234567890:android:abcdef`)
+2. `FIREBASE_APP_ID` - Your Firebase App ID (e.g.,
+   `1:1234567890:android:abcdef`)
 
 ### Finding Your Firebase App ID
 
@@ -228,7 +238,8 @@ Enable debug mode for detailed logging:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.
 
 ## Related Actions
 

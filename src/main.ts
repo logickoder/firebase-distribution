@@ -2,7 +2,6 @@ import * as core from '@actions/core'
 import { exec } from '@actions/exec'
 import { glob } from 'glob'
 import * as fs from 'fs'
-import * as path from 'path'
 
 const inputs = {
   serviceCredentialsFile: core.getInput('serviceCredentialsFile'),

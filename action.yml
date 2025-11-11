@@ -1,6 +1,7 @@
-name: 'Firebase App Distribution'
+name: 'Firebase Distribution with Wildcards'
 description:
-  'Distribute app to Firebase App Distribution with wildcard file support'
+  'Distribute apps to Firebase App Distribution with wildcard pattern support
+  for multiple files'
 author: 'Jeffery Orazulike'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.

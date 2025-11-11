@@ -4,7 +4,8 @@ A GitHub Action to distribute your Android and iOS apps to testers using
 Firebase App Distribution. Supports wildcard file patterns for easy distribution
 of multiple builds (e.g., APK splits).
 
-> **Note:** This action bundles Firebase CLI automatically - no manual installation required!  
+> **Note:** This action bundles Firebase CLI automatically - no manual
+> installation required!  
 > For versioning and release information, see [RELEASE.md](RELEASE.md).
 
 ## Features
@@ -66,6 +67,8 @@ Perfect for distributing APK splits or multiple variants. See the
     appId: ${{ secrets.FIREBASE_APP_ID }}
     groups: internal-testers
     releaseNotes: 'New build with split APKs for different architectures'
+    # Each file will have its name appended to release notes by default
+    # Set to 'false' to disable: includeFileNameInReleaseNotes: false
 ```
 
 ### Complete Example with Custom Release Notes
@@ -139,6 +142,7 @@ jobs:
 | `testers`                       | Comma-separated list of tester email addresses                                   | No       |                   |
 | `releaseNotes`                  | Release notes text                                                               | No       | Latest git commit |
 | `releaseNotesFile`              | Path to file containing release notes                                            | No       |                   |
+| `includeFileNameInReleaseNotes` | Include filename in release notes when distributing multiple files               | No       | `true`            |
 | `debug`                         | Enable debug mode for detailed logging                                           | No       | `false`           |
 
 \*Either `serviceCredentialsFile` or `serviceCredentialsFileContent` must be
@@ -241,15 +245,19 @@ Enable debug mode for detailed logging:
 
 ## Versioning
 
-This action follows [semantic versioning](https://semver.org/). You can reference it in three ways:
+This action follows [semantic versioning](https://semver.org/). You can
+reference it in three ways:
 
 - **`@v1`** (Recommended) - Automatically uses the latest v1.x.x release
 - **`@v1.2.3`** (Stable) - Pins to an exact version for maximum stability
 - **`@main`** (Not recommended) - Uses the latest commit (may be unstable)
 
-For most use cases, using `@v1` is recommended as it provides automatic updates while maintaining compatibility.
+For most use cases, using `@v1` is recommended as it provides automatic updates
+while maintaining compatibility.
 
-> **📖 For maintainers:** See [RELEASE.md](RELEASE.md) for detailed information about the release process, creating new versions, and how the distribution system works.
+> **📖 For maintainers:** See [RELEASE.md](RELEASE.md) for detailed information
+> about the release process, creating new versions, and how the distribution
+> system works.
 
 ## License
 

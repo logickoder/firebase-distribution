@@ -13,6 +13,9 @@ const inputs = {
   testers: core.getInput('testers'),
   releaseNotes: core.getInput('releaseNotes'),
   releaseNotesFile: core.getInput('releaseNotesFile'),
+  includeFileNameInReleaseNotes: core.getBooleanInput(
+    'includeFileNameInReleaseNotes'
+  ),
   debug: core.getBooleanInput('debug')
 }
 
@@ -73,13 +76,23 @@ function parseOutputLine(line: string): void {
   }
 }
 
-async function distributeFile(filePath: string): Promise<void> {
+async function distributeFile(
+  filePath: string,
+  fileIndex: number,
+  totalFiles: number
+): Promise<void> {
   core.info(`Distributing file: ${filePath}`)
 
   // Handle release notes
   let releaseNotes = inputs.releaseNotes
   if (!releaseNotes && !inputs.releaseNotesFile) {
     releaseNotes = await getDefaultReleaseNotes()
+  }
+
+  // If multiple files and feature is enabled, append filename to release notes
+  if (totalFiles > 1 && releaseNotes && inputs.includeFileNameInReleaseNotes) {
+    const fileName = path.basename(filePath)
+    releaseNotes = `${releaseNotes}\n\nFile: ${fileName} (${fileIndex}/${totalFiles})`
   }
 
   // Build the firebase CLI arguments
@@ -158,8 +171,8 @@ export async function run(): Promise<void> {
     core.info(`Found ${files.length} file(s) matching pattern: ${inputs.file}`)
 
     // Distribute each file
-    for (const file of files) {
-      await distributeFile(file)
+    for (let i = 0; i < files.length; i++) {
+      await distributeFile(files[i], i + 1, files.length)
     }
 
     core.info('✅ Distribution completed successfully')

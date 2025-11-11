@@ -1,54 +1,58 @@
-name: 'Firebase Distribution with Wildcards'
+name: "Firebase Distribution with Wildcards"
 description:
-  'Distribute apps to Firebase App Distribution with wildcard pattern support
-  for multiple files'
-author: 'Jeffery Orazulike'
+  "Distribute apps to Firebase App Distribution with wildcard pattern support
+  for multiple files"
+author: "Jeffery Orazulike"
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: 'upload-cloud'
-  color: 'orange'
+  icon: "upload-cloud"
+  color: "orange"
 
 # Define your inputs here.
 inputs:
   serviceCredentialsFile:
-    description: 'Path to the service account credentials JSON file'
+    description: "Path to the service account credentials JSON file"
     required: false
   serviceCredentialsFileContent:
-    description: 'Content of the service account credentials JSON file'
+    description: "Content of the service account credentials JSON file"
     required: false
   file:
     description:
-      'Path to the binary file to upload. Supports wildcard patterns (e.g.,
-      *.apk, **/*.aab)'
+      "Path to the binary file to upload. Supports wildcard patterns (e.g.,
+      *.apk, **/*.aab)"
     required: true
   appId:
-    description: 'Firebase App ID'
+    description: "Firebase App ID"
     required: true
   groups:
-    description: 'Comma-separated list of tester groups'
+    description: "Comma-separated list of tester groups"
     required: false
   testers:
-    description: 'Comma-separated list of tester emails'
+    description: "Comma-separated list of tester emails"
     required: false
   releaseNotes:
-    description: 'Release notes for this build'
+    description: "Release notes for this build"
     required: false
   releaseNotesFile:
-    description: 'Path to file containing release notes'
+    description: "Path to file containing release notes"
     required: false
+  includeFileNameInReleaseNotes:
+    description: "Include filename in release notes when distributing multiple files"
+    required: false
+    default: "true"
   debug:
-    description: 'Enable debug mode'
+    description: "Enable debug mode"
     required: false
-    default: 'false'
+    default: "false"
 
 outputs:
   firebase-console-uri:
-    description: 'Firebase Console URI for this release'
+    description: "Firebase Console URI for this release"
   testing-uri:
-    description: 'Testing URI to share with testers'
+    description: "Testing URI to share with testers"
   binary-download-uri:
-    description: 'URI to download the release binary'
+    description: "URI to download the release binary"
 
 runs:
   using: node20

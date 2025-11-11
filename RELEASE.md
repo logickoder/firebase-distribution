@@ -1,10 +1,12 @@
 # Release Process
 
-This action uses a release-based distribution model to avoid committing large `dist/` files to the repository.
+This action uses a release-based distribution model to avoid committing large
+`dist/` files to the repository.
 
 ## How It Works
 
-1. The `dist/` folder is **NOT** committed to the `main` branch (it's in `.gitignore`)
+1. The `dist/` folder is **NOT** committed to the `main` branch (it's in
+   `.gitignore`)
 2. When you push a version tag (e.g., `v1.0.0`), the release workflow:
    - Builds the action (`pnpm run package`)
    - Creates a `releases/v1` branch (or updates it if it exists)
@@ -38,6 +40,7 @@ git push origin main --follow-tags
 ```
 
 The release workflow will automatically:
+
 - Build the distribution files
 - Create/update a release branch (e.g., `releases/v1`)
 - Commit the built files to the release branch
@@ -54,7 +57,8 @@ Users can reference your action in three ways:
 - uses: logickoder/firebase-distribution@v1
 ```
 
-This automatically gets the latest v1.x.x release. The major version tag is automatically updated when you release new versions.
+This automatically gets the latest v1.x.x release. The major version tag is
+automatically updated when you release new versions.
 
 ### 2. Specific Version
 
@@ -70,7 +74,8 @@ This pins to a specific version for maximum stability.
 - uses: logickoder/firebase-distribution@main
 ```
 
-**Note:** The `main` branch doesn't contain `dist/`, so this won't work for production. Use release tags instead.
+**Note:** The `main` branch doesn't contain `dist/`, so this won't work for
+production. Use release tags instead.
 
 ## Development Workflow
 
@@ -108,7 +113,7 @@ pnpm run package
 ✅ **Cleaner PRs** - Pull requests only show source code changes  
 ✅ **Isolated Builds** - Built files separated in release branches  
 ✅ **Works with GitHub Actions** - Users reference tags/branches directly  
-✅ **Standard Practice** - Follows common GitHub Actions patterns  
+✅ **Standard Practice** - Follows common GitHub Actions patterns
 
 ## Troubleshooting
 
@@ -122,4 +127,5 @@ If users get an error that the action can't be found:
 
 ### Major Version Tag Not Updating
 
-The major version tag (e.g., `v1`) only updates for stable releases. Pre-release versions (alpha, beta, rc) don't update the major version tag.
+The major version tag (e.g., `v1`) only updates for stable releases. Pre-release
+versions (alpha, beta, rc) don't update the major version tag.

@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
 
 permissions:
   contents: write
@@ -67,7 +67,9 @@ jobs:
           git push origin $TAG
 
       - name: Update Major Version Tag
-        if: ${{ !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') && !contains(github.ref, 'rc') }}
+        if:
+          ${{ !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') &&
+          !contains(github.ref, 'rc') }}
         run: |
           # Extract major version (e.g., v1 from v1.2.3)
           TAG=${GITHUB_REF#refs/tags/}
@@ -82,4 +84,6 @@ jobs:
         with:
           generate_release_notes: true
           draft: false
-          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+          prerelease:
+            ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') ||
+            contains(github.ref, 'rc') }}

@@ -46,7 +46,7 @@ This action uses Firebase service account authentication for secure, long-term a
 
 ### Upload Multiple Files with Wildcards
 
-Perfect for distributing APK splits or multiple variants:
+Perfect for distributing APK splits or multiple variants. See the [Wildcard Pattern Guide](WILDCARD_GUIDE.md) for more pattern examples.
 
 ```yaml
 - name: Distribute APK Splits

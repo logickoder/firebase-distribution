@@ -2,9 +2,6 @@ name: Example - Distribute to Firebase
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   distribute:
@@ -29,9 +26,9 @@ jobs:
         uses: ./
         with:
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          file: 'app/build/outputs/apk/**/*.apk' # Supports wildcards!
+          file: "app/build/outputs/apk/**/*.apk" # Supports wildcards!
           appId: ${{ secrets.FIREBASE_APP_ID }}
-          groups: 'internal-testers'
+          groups: "internal-testers"
           releaseNotes: |
             🚀 New Build from GitHub Actions
 

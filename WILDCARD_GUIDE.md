@@ -132,7 +132,7 @@ Matches all APKs except those in debug folders
 
 ```yaml
 - name: Distribute All Release Builds
-  uses: logickoder/firebase-distribution-with-wildcards@v1
+  uses: logickoder/firebase-distribution-with-wildcards@main
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: '**/release/*.apk'
@@ -144,7 +144,7 @@ Matches all APKs except those in debug folders
 
 ```yaml
 - name: Distribute ARM Builds Only
-  uses: logickoder/firebase-distribution-with-wildcards@v1
+  uses: logickoder/firebase-distribution-with-wildcards@main
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: 'app/build/outputs/apk/release/app-arm*-release.apk'
@@ -156,7 +156,7 @@ Matches all APKs except those in debug folders
 
 ```yaml
 - name: Distribute Staging and Production
-  uses: logickoder/firebase-distribution-with-wildcards@v1
+  uses: logickoder/firebase-distribution-with-wildcards@main
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: 'app/build/outputs/apk/{staging,production}/release/*.apk'
@@ -168,7 +168,7 @@ Matches all APKs except those in debug folders
 
 ```yaml
 - name: Distribute Non-Debug Builds
-  uses: logickoder/firebase-distribution-with-wildcards@v1
+  uses: logickoder/firebase-distribution-with-wildcards@main
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: 'app/build/outputs/apk/!(debug)/**/*.apk'
@@ -219,7 +219,7 @@ Verify files exist before distribution:
     ls -R app/build/outputs/apk/
 
 - name: Distribute
-  uses: logickoder/firebase-distribution-with-wildcards@v1
+  uses: logickoder/firebase-distribution-with-wildcards@main
   with:
     file: 'app/build/outputs/apk/**/*.apk'
     # ... other inputs

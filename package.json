@@ -33,7 +33,8 @@
     "package": "npx ncc build src/index.ts -o dist --source-map --license licenses.txt",
     "package:watch": "npm run package -- --watch",
     "test": "npx jest",
-    "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
+    "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package",
+    "release": "script/release"
   },
   "license": "MIT",
   "jest": {
@@ -68,6 +69,7 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/exec": "^1.1.1",
+    "firebase-tools": "^14.24.2",
     "glob": "^11.0.3"
   },
   "devDependencies": {

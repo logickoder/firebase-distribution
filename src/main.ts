@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import { exec } from '@actions/exec'
 import { glob } from 'glob'
 import * as fs from 'fs'
+import * as firebase from 'firebase-tools'
 
 const inputs = {
   serviceCredentialsFile: core.getInput('serviceCredentialsFile'),
@@ -56,35 +57,8 @@ async function getDefaultReleaseNotes(): Promise<string> {
   return output.trim()
 }
 
-function parseOutputLine(line: string): void {
-  if (line.includes('View this release in the Firebase console')) {
-    const uri = line.replace(/.*: /, '').trim()
-    core.setOutput('firebase-console-uri', uri)
-    core.info(`Console URI: ${uri}`)
-  } else if (line.includes('Share this release with testers who have access')) {
-    const uri = line.replace(/.*: /, '').trim()
-    core.setOutput('testing-uri', uri)
-    core.info(`Testing URI: ${uri}`)
-  } else if (line.includes('Download the release binary')) {
-    const uri = line.replace(/.*: /, '').trim()
-    core.setOutput('binary-download-uri', uri)
-    core.info(`Binary Download URI: ${uri}`)
-  }
-}
-
 async function distributeFile(filePath: string): Promise<void> {
   core.info(`Distributing file: ${filePath}`)
-
-  // Build the firebase CLI arguments
-  const args = ['appdistribution:distribute', filePath, '--app', inputs.appId]
-
-  if (inputs.groups) {
-    args.push('--groups', inputs.groups)
-  }
-
-  if (inputs.testers) {
-    args.push('--testers', inputs.testers)
-  }
 
   // Handle release notes
   let releaseNotes = inputs.releaseNotes
@@ -92,33 +66,49 @@ async function distributeFile(filePath: string): Promise<void> {
     releaseNotes = await getDefaultReleaseNotes()
   }
 
-  if (inputs.releaseNotesFile) {
-    args.push('--release-notes-file', inputs.releaseNotesFile)
-  } else if (releaseNotes) {
-    args.push('--release-notes', releaseNotes)
+  // Build the firebase CLI options
+  const options = {
+    app: inputs.appId,
+    token: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+    groups: inputs.groups || undefined,
+    testers: inputs.testers || undefined,
+    releaseNotes: inputs.releaseNotesFile ? undefined : releaseNotes,
+    releaseNotesFile: inputs.releaseNotesFile || undefined,
+    debug: inputs.debug || undefined
   }
 
-  if (inputs.debug) {
-    args.push('--debug')
-  }
+  try {
+    // Use firebase-tools programmatic API
+    const result = await firebase.appdistribution.distribute(filePath, options)
 
-  // Execute firebase CLI and capture output
-  await exec('firebase', args, {
-    listeners: {
-      stdout: (data: Buffer) => {
-        const lines = data.toString().split('\n')
-        lines.forEach(line => {
-          if (line.trim()) {
-            core.info(line)
-            parseOutputLine(line)
-          }
-        })
-      },
-      stderr: (data: Buffer) => {
-        core.error(data.toString())
+    // Log the result
+    if (result) {
+      core.info(JSON.stringify(result, null, 2))
+
+      // Try to extract URIs from the result if available
+      if (typeof result === 'object') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const resultObj = result as Record<string, any>
+        if (resultObj.consoleUri) {
+          core.setOutput('firebase-console-uri', resultObj.consoleUri)
+          core.info(`Console URI: ${resultObj.consoleUri}`)
+        }
+        if (resultObj.testingUri) {
+          core.setOutput('testing-uri', resultObj.testingUri)
+          core.info(`Testing URI: ${resultObj.testingUri}`)
+        }
+        if (resultObj.binaryDownloadUri) {
+          core.setOutput('binary-download-uri', resultObj.binaryDownloadUri)
+          core.info(`Binary Download URI: ${resultObj.binaryDownloadUri}`)
+        }
       }
     }
-  })
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to distribute ${filePath}: ${error.message}`)
+    }
+    throw error
+  }
 }
 
 export async function run(): Promise<void> {

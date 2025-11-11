@@ -4,6 +4,9 @@ A GitHub Action to distribute your Android and iOS apps to testers using
 Firebase App Distribution. Supports wildcard file patterns for easy distribution
 of multiple builds (e.g., APK splits).
 
+> **Note:** This action bundles Firebase CLI automatically - no manual installation required!  
+> For versioning and release information, see [RELEASE.md](RELEASE.md).
+
 ## Features
 
 - 📦 Distribute Android (APK, AAB) and iOS (IPA) apps to Firebase App
@@ -41,7 +44,7 @@ access.
 
 ```yaml
 - name: Distribute to Firebase App Distribution
-  uses: logickoder/firebase-distribution@main
+  uses: logickoder/firebase-distribution@v1
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: app/build/outputs/apk/release/app-release.apk
@@ -56,7 +59,7 @@ Perfect for distributing APK splits or multiple variants. See the
 
 ```yaml
 - name: Distribute APK Splits
-  uses: logickoder/firebase-distribution@main
+  uses: logickoder/firebase-distribution@v1
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: 'app/build/outputs/apk/release/*.apk'
@@ -84,7 +87,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Distribute to Firebase
-        uses: logickoder/firebase-distribution@main
+        uses: logickoder/firebase-distribution@v1
         with:
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           file: 'app/build/outputs/apk/**/*.apk'
@@ -103,7 +106,7 @@ jobs:
 
 ```yaml
 - name: Distribute with Release Notes File
-  uses: logickoder/firebase-distribution@main
+  uses: logickoder/firebase-distribution@v1
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: app/build/outputs/apk/release/app-release.apk
@@ -116,7 +119,7 @@ jobs:
 
 ```yaml
 - name: Distribute with Service Account File
-  uses: logickoder/firebase-distribution@main
+  uses: logickoder/firebase-distribution@v1
   with:
     serviceCredentialsFile: ./firebase-service-account.json
     file: '**/*.apk'
@@ -154,7 +157,7 @@ provided
 ```yaml
 - name: Distribute to Firebase
   id: firebase
-  uses: logickoder/firebase-distribution@main
+  uses: logickoder/firebase-distribution@v1
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: app/build/outputs/apk/release/app-release.apk
@@ -227,7 +230,7 @@ Actions):
 Enable debug mode for detailed logging:
 
 ```yaml
-- uses: logickoder/firebase-distribution@main
+- uses: logickoder/firebase-distribution@v1
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: app.apk
@@ -235,6 +238,18 @@ Enable debug mode for detailed logging:
     groups: testers
     debug: true
 ```
+
+## Versioning
+
+This action follows [semantic versioning](https://semver.org/). You can reference it in three ways:
+
+- **`@v1`** (Recommended) - Automatically uses the latest v1.x.x release
+- **`@v1.2.3`** (Stable) - Pins to an exact version for maximum stability
+- **`@main`** (Not recommended) - Uses the latest commit (may be unstable)
+
+For most use cases, using `@v1` is recommended as it provides automatic updates while maintaining compatibility.
+
+> **📖 For maintainers:** See [RELEASE.md](RELEASE.md) for detailed information about the release process, creating new versions, and how the distribution system works.
 
 ## License
 

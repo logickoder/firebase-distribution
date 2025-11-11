@@ -17,15 +17,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
@@ -41,7 +43,7 @@ jobs:
 
           # Configure git
           git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.email github-actions@logickoder.dev
 
           # Create/checkout release branch
           git checkout -b releases/$MAJOR_VERSION
@@ -56,6 +58,13 @@ jobs:
 
           # Push the release branch
           git push origin releases/$MAJOR_VERSION --force
+
+          # Delete the old tag from remote (it points to main branch)
+          git push origin :refs/tags/$TAG || true
+
+          # Re-create the tag pointing to this release branch commit
+          git tag -fa $TAG -m "Release $TAG"
+          git push origin $TAG
 
       - name: Update Major Version Tag
         if: ${{ !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') && !contains(github.ref, 'rc') }}

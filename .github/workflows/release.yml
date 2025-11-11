@@ -33,16 +33,29 @@ jobs:
       - name: Build dist/
         run: pnpm run package
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            dist/index.js
-            dist/index.js.map
-            dist/licenses.txt
-          generate_release_notes: true
-          draft: false
-          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+      - name: Commit dist/ to release branch
+        run: |
+          # Extract version tag
+          TAG=${GITHUB_REF#refs/tags/}
+          MAJOR_VERSION=$(echo $TAG | cut -d. -f1)
+
+          # Configure git
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          # Create/checkout release branch
+          git checkout -b releases/$MAJOR_VERSION
+
+          # Remove dist/ from gitignore for this branch
+          sed -i '/^dist\//d' .gitignore
+
+          # Add and commit dist/
+          git add -f dist/
+          git add .gitignore
+          git commit -m "Build for $TAG"
+
+          # Push the release branch
+          git push origin releases/$MAJOR_VERSION --force
 
       - name: Update Major Version Tag
         if: ${{ !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') && !contains(github.ref, 'rc') }}
@@ -51,8 +64,13 @@ jobs:
           TAG=${GITHUB_REF#refs/tags/}
           MAJOR_VERSION=$(echo $TAG | cut -d. -f1)
 
-          # Force update the major version tag
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          # Update the major version tag to point to the release branch
           git tag -fa $MAJOR_VERSION -m "Update $MAJOR_VERSION tag"
           git push origin $MAJOR_VERSION --force
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}

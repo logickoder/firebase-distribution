@@ -4,11 +4,13 @@ This action uses a release-based distribution model to avoid committing large `d
 
 ## How It Works
 
-1. The `dist/` folder is **NOT** committed to the repository (it's in `.gitignore`)
+1. The `dist/` folder is **NOT** committed to the `main` branch (it's in `.gitignore`)
 2. When you push a version tag (e.g., `v1.0.0`), the release workflow:
    - Builds the action (`pnpm run package`)
-   - Creates a GitHub release with the built files attached
-   - Updates the major version tag (e.g., `v1`) to point to the latest release
+   - Creates a `releases/v1` branch (or updates it if it exists)
+   - Commits the built `dist/` files to that release branch
+   - Updates the major version tag (e.g., `v1`) to point to the release branch
+   - Creates a GitHub release
 
 ## Creating a Release
 
@@ -37,9 +39,10 @@ git push origin main --follow-tags
 
 The release workflow will automatically:
 - Build the distribution files
+- Create/update a release branch (e.g., `releases/v1`)
+- Commit the built files to the release branch
+- Update the major version tag (e.g., `v1`) to point to the release branch
 - Create a GitHub release
-- Attach the built files to the release
-- Update the major version tag (e.g., `v1`, `v2`)
 
 ## Using the Action
 
@@ -61,13 +64,13 @@ This automatically gets the latest v1.x.x release. The major version tag is auto
 
 This pins to a specific version for maximum stability.
 
-### 3. Branch (Not Recommended for Production)
+### 3. Branch
 
 ```yaml
 - uses: logickoder/firebase-distribution@main
 ```
 
-**Note:** This won't work unless you commit `dist/` to the branch. Only use for development/testing.
+**Note:** The `main` branch doesn't contain `dist/`, so this won't work for production. Use release tags instead.
 
 ## Development Workflow
 
@@ -101,11 +104,11 @@ pnpm run package
 
 ## Benefits
 
-✅ **Smaller Repository** - No large `dist/` files in version control  
-✅ **Cleaner Diffs** - Pull requests only show source code changes  
-✅ **Faster Clones** - Repository downloads faster  
-✅ **Less Bandwidth** - No repeated downloads of large built files  
-✅ **Standard Practice** - Follows GitHub Actions best practices  
+✅ **Clean Main Branch** - No large `dist/` files in main branch history  
+✅ **Cleaner PRs** - Pull requests only show source code changes  
+✅ **Isolated Builds** - Built files separated in release branches  
+✅ **Works with GitHub Actions** - Users reference tags/branches directly  
+✅ **Standard Practice** - Follows common GitHub Actions patterns  
 
 ## Troubleshooting
 

@@ -41,7 +41,7 @@ access.
 
 ```yaml
 - name: Distribute to Firebase App Distribution
-  uses: logickoder/firebase-distribution-with-wildcards@main
+  uses: logickoder/firebase-distribution@main
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: app/build/outputs/apk/release/app-release.apk
@@ -56,7 +56,7 @@ Perfect for distributing APK splits or multiple variants. See the
 
 ```yaml
 - name: Distribute APK Splits
-  uses: logickoder/firebase-distribution-with-wildcards@main
+  uses: logickoder/firebase-distribution@main
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: 'app/build/outputs/apk/release/*.apk'
@@ -84,7 +84,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Distribute to Firebase
-        uses: logickoder/firebase-distribution-with-wildcards@main
+        uses: logickoder/firebase-distribution@main
         with:
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           file: 'app/build/outputs/apk/**/*.apk'
@@ -103,7 +103,7 @@ jobs:
 
 ```yaml
 - name: Distribute with Release Notes File
-  uses: logickoder/firebase-distribution-with-wildcards@main
+  uses: logickoder/firebase-distribution@main
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: app/build/outputs/apk/release/app-release.apk
@@ -116,7 +116,7 @@ jobs:
 
 ```yaml
 - name: Distribute with Service Account File
-  uses: logickoder/firebase-distribution-with-wildcards@main
+  uses: logickoder/firebase-distribution@main
   with:
     serviceCredentialsFile: ./firebase-service-account.json
     file: '**/*.apk'
@@ -154,7 +154,7 @@ provided
 ```yaml
 - name: Distribute to Firebase
   id: firebase
-  uses: logickoder/firebase-distribution-with-wildcards@main
+  uses: logickoder/firebase-distribution@main
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: app/build/outputs/apk/release/app-release.apk
@@ -227,7 +227,7 @@ Actions):
 Enable debug mode for detailed logging:
 
 ```yaml
-- uses: logickoder/firebase-distribution-with-wildcards@main
+- uses: logickoder/firebase-distribution@main
   with:
     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     file: app.apk
@@ -243,7 +243,7 @@ for details.
 
 ## Related Actions
 
-- [Firebase App Distribution Official](https://github.com/wzieba/firebase-distribution-with-wildcards-Github-Action)
+- [Firebase App Distribution Official](https://github.com/wzieba/Firebase-Distribution-Github-Action)
 - [Android Build Actions](https://github.com/marketplace?type=actions&query=android+build)
 
 ## Contributing

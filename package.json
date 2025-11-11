@@ -1,16 +1,16 @@
 {
-  "name": "firebase-distribution-with-wildcards",
+  "name": "firebase-distribution",
   "description": "Distribute app to Firebase App Distribution with wildcard file support",
   "version": "1.0.0",
   "author": "Jeffery Orazulike",
   "private": true,
-  "homepage": "https://github.com/actions/firebase-distribution-with-wildcards",
+  "homepage": "https://github.com/marketplace/actions/firebase-distribution-with-wildcards",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/firebase-distribution-with-wildcards.git"
+    "url": "git+https://github.com/marketplace/actions/firebase-distribution-with-wildcards.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/firebase-distribution-with-wildcards/issues"
+    "url": "https://github.com/marketplace/actions/firebase-distribution-with-wildcards/issues"
   },
   "keywords": [
     "actions",

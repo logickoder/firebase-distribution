@@ -25682,13 +25682,12 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.inputs = void 0;
 exports.run = run;
 const core = __importStar(__nccwpck_require__(6966));
 const exec_1 = __nccwpck_require__(2851);
 const glob_1 = __nccwpck_require__(8949);
 const fs = __importStar(__nccwpck_require__(9896));
-exports.inputs = {
+const inputs = {
     serviceCredentialsFile: core.getInput('serviceCredentialsFile'),
     serviceCredentialsFileContent: core.getInput('serviceCredentialsFileContent'),
     file: core.getInput('file', { required: true }),
@@ -25712,13 +25711,13 @@ async function setupGitSafeDirectory() {
     }
 }
 async function setupAuthentication() {
-    if (exports.inputs.serviceCredentialsFile) {
-        process.env.GOOGLE_APPLICATION_CREDENTIALS = exports.inputs.serviceCredentialsFile;
+    if (inputs.serviceCredentialsFile) {
+        process.env.GOOGLE_APPLICATION_CREDENTIALS = inputs.serviceCredentialsFile;
         core.info('Using service account from file');
     }
-    else if (exports.inputs.serviceCredentialsFileContent) {
+    else if (inputs.serviceCredentialsFileContent) {
         const credentialsPath = 'service_credentials_content.json';
-        fs.writeFileSync(credentialsPath, exports.inputs.serviceCredentialsFileContent);
+        fs.writeFileSync(credentialsPath, inputs.serviceCredentialsFileContent);
         process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialsPath;
         core.info('Using service account from content');
     }
@@ -25757,25 +25756,25 @@ function parseOutputLine(line) {
 async function distributeFile(filePath) {
     core.info(`Distributing file: ${filePath}`);
     // Build the firebase CLI arguments
-    const args = ['appdistribution:distribute', filePath, '--app', exports.inputs.appId];
-    if (exports.inputs.groups) {
-        args.push('--groups', exports.inputs.groups);
+    const args = ['appdistribution:distribute', filePath, '--app', inputs.appId];
+    if (inputs.groups) {
+        args.push('--groups', inputs.groups);
     }
-    if (exports.inputs.testers) {
-        args.push('--testers', exports.inputs.testers);
+    if (inputs.testers) {
+        args.push('--testers', inputs.testers);
     }
     // Handle release notes
-    let releaseNotes = exports.inputs.releaseNotes;
-    if (!releaseNotes && !exports.inputs.releaseNotesFile) {
+    let releaseNotes = inputs.releaseNotes;
+    if (!releaseNotes && !inputs.releaseNotesFile) {
         releaseNotes = await getDefaultReleaseNotes();
     }
-    if (exports.inputs.releaseNotesFile) {
-        args.push('--release-notes-file', exports.inputs.releaseNotesFile);
+    if (inputs.releaseNotesFile) {
+        args.push('--release-notes-file', inputs.releaseNotesFile);
     }
     else if (releaseNotes) {
         args.push('--release-notes', releaseNotes);
     }
-    if (exports.inputs.debug) {
+    if (inputs.debug) {
         args.push('--debug');
     }
     // Execute firebase CLI and capture output
@@ -25803,14 +25802,14 @@ async function run() {
         // Setup authentication
         await setupAuthentication();
         // Resolve file pattern (supports wildcards)
-        const files = await (0, glob_1.glob)(exports.inputs.file, {
+        const files = await (0, glob_1.glob)(inputs.file, {
             nodir: true,
             absolute: true
         });
         if (files.length === 0) {
-            throw new Error(`No files found matching pattern: ${exports.inputs.file}`);
+            throw new Error(`No files found matching pattern: ${inputs.file}`);
         }
-        core.info(`Found ${files.length} file(s) matching pattern: ${exports.inputs.file}`);
+        core.info(`Found ${files.length} file(s) matching pattern: ${inputs.file}`);
         // Distribute each file
         for (const file of files) {
             await distributeFile(file);

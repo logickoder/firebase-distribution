@@ -100,7 +100,6 @@ __tests__/runner/*
 # Distribution directory
 # The dist/ folder is built during releases and attached as an artifact
 # Users should reference specific release tags (e.g., v1, v1.0.0)
-dist/
 
 # IDE files
 .idea

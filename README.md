@@ -130,11 +130,42 @@ jobs:
     groups: testers
 ```
 
+### Multi-Repository Workflow
+
+When you have multiple repositories checked out in your workflow:
+
+```yaml
+- name: Checkout main app
+  uses: actions/checkout@v4
+  with:
+    path: main-app
+
+- name: Checkout library
+  uses: actions/checkout@v4
+  with:
+    repository: org/library
+    path: library
+
+- name: Build main app
+  run: ./gradlew assembleRelease
+  working-directory: main-app
+
+- name: Distribute from main-app directory
+  uses: logickoder/firebase-distribution@v1
+  with:
+    workingDirectory: main-app
+    serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    file: 'app/build/outputs/apk/release/*.apk'
+    appId: ${{ secrets.FIREBASE_APP_ID }}
+    groups: testers
+```
+
 ## Inputs
 
 | Name                            | Description                                                                      | Required | Default           |
 | ------------------------------- | -------------------------------------------------------------------------------- | -------- | ----------------- |
 | `file`                          | Path to binary file(s) to upload. Supports wildcards (e.g., `*.apk`, `**/*.aab`) | Yes      |                   |
+| `workingDirectory`              | Working directory to run the action in (for multi-repo workflows)                | No       | `.`               |
 | `appId`                         | Firebase App ID (found in Firebase console)                                      | Yes      |                   |
 | `serviceCredentialsFile`        | Path to service account JSON file                                                | No\*     |                   |
 | `serviceCredentialsFileContent` | Content of service account JSON file                                             | No\*     |                   |

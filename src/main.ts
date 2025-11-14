@@ -8,6 +8,7 @@ const inputs = {
   serviceCredentialsFile: core.getInput('serviceCredentialsFile'),
   serviceCredentialsFileContent: core.getInput('serviceCredentialsFileContent'),
   file: core.getInput('file', { required: true }),
+  workingDirectory: core.getInput('workingDirectory') || '.',
   appId: core.getInput('appId', { required: true }),
   groups: core.getInput('groups'),
   testers: core.getInput('testers'),
@@ -19,16 +20,23 @@ const inputs = {
   debug: core.getBooleanInput('debug')
 }
 
-async function setupGitSafeDirectory(): Promise<void> {
+async function setupGitSafeDirectory(workingDir: string): Promise<void> {
+  // Add the main workspace
   const workspace = process.env.GITHUB_WORKSPACE
   if (workspace) {
-    await exec('git', [
-      'config',
-      '--global',
-      '--add',
-      'safe.directory',
-      workspace
-    ])
+    async function add(dir: string) {
+      await exec('git', ['config', '--global', '--add', 'safe.directory', dir])
+    }
+
+    await add(workspace)
+
+    // If working directory is different, add it too
+    if (workingDir !== '.') {
+      const absoluteWorkingDir = path.isAbsolute(workingDir)
+        ? workingDir
+        : path.join(workspace, workingDir)
+      await add(absoluteWorkingDir)
+    }
   }
 }
 
@@ -48,9 +56,10 @@ async function setupAuthentication(): Promise<void> {
   }
 }
 
-async function getDefaultReleaseNotes(): Promise<string> {
+async function getDefaultReleaseNotes(workingDir: string): Promise<string> {
   let output = ''
   await exec('git', ['log', '-1', '--pretty=short'], {
+    cwd: workingDir,
     listeners: {
       stdout: (data: Buffer) => {
         output += data.toString()
@@ -79,14 +88,15 @@ function parseOutputLine(line: string): void {
 async function distributeFile(
   filePath: string,
   fileIndex: number,
-  totalFiles: number
+  totalFiles: number,
+  workingDir: string
 ): Promise<void> {
   core.info(`Distributing file: ${filePath}`)
 
   // Handle release notes
   let releaseNotes = inputs.releaseNotes
   if (!releaseNotes && !inputs.releaseNotesFile) {
-    releaseNotes = await getDefaultReleaseNotes()
+    releaseNotes = await getDefaultReleaseNotes(workingDir)
   }
 
   // If multiple files and feature is enabled, append filename to release notes
@@ -152,14 +162,20 @@ async function distributeFile(
 
 export async function run(): Promise<void> {
   try {
+    // Get working directory
+    const workingDir = inputs.workingDirectory
+    core.info(`Working directory: ${workingDir}`)
+
     // Setup git safe directory
-    await setupGitSafeDirectory()
+    await setupGitSafeDirectory(workingDir)
 
     // Setup authentication
     await setupAuthentication()
 
     // Resolve file pattern (supports wildcards)
+    // Use working directory as base for glob
     const files = await glob(inputs.file, {
+      cwd: workingDir,
       nodir: true,
       absolute: true
     })
@@ -172,7 +188,7 @@ export async function run(): Promise<void> {
 
     // Distribute each file
     for (let i = 0; i < files.length; i++) {
-      await distributeFile(files[i], i + 1, files.length)
+      await distributeFile(files[i], i + 1, files.length, workingDir)
     }
 
     core.info('✅ Distribution completed successfully')

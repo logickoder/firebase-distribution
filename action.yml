@@ -22,6 +22,10 @@ inputs:
       "Path to the binary file to upload. Supports wildcard patterns (e.g.,
       *.apk, **/*.aab)"
     required: true
+  workingDirectory:
+    description: "Working directory to run the action in (for multi-repo workflows)"
+    required: false
+    default: "."
   appId:
     description: "Firebase App ID"
     required: true

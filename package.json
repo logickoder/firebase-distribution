@@ -21,8 +21,9 @@
     ".": "./dist/index.js"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
+  "packageManager": "pnpm@11.18.0",
   "scripts": {
     "bundle": "npm run format:write && npm run package",
     "ci-test": "npx jest",

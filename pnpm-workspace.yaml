@@ -1,0 +1,4 @@
+allowBuilds:
+  protobufjs: true
+  re2: true
+  unrs-resolver: true
